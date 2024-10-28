@@ -13,7 +13,14 @@ resources:
       name: wiz-lab-ado-azure/templates
 
 variables:
- - group: wiz-cli
+  - group: wiz-cli
+  - name: IMAGE_NAME
+    type: string
+    value: my-django-app
+  - name: IMAGE_REGISTRY
+    type: string
+    value: my-repository
+
 
 stages: 
   - stage: build
@@ -28,8 +35,8 @@ stages:
           - task: Docker@2
             displayName: Build container image
             inputs:
-              containerRegistry: acreemrs5ia
-              repository: wizard-meeple
+              containerRegistry: $(IMAGE_REGISTRY)
+              repository: $(IMAGE_REPOSITORY)
               command: build
               tags: $(Build.SourceVersion)
 
@@ -39,13 +46,14 @@ stages:
               command: 'image'
               clientid: $(WIZ_CLIENT_ID)
               secret: $(WIZ_CLIENT_SECRET)
-              image: 'acreemrs5ia.azurecr.io/wizard-meeple:$(Build.SourceVersion)'
+              image: '$(IMAGE_REGISTRY)/$(IMAGE_NAME):$(Build.SourceVersion)'
               policyHitsOnly: true
+
           - task: Docker@2
             displayName: Push image to ACR
             inputs:
-              containerRegistry: acreemrs5ia
-              repository: wizard-meeple
+              containerRegistry: $(IMAGE_REGISTRY)
+              repository: $(IMAGE_NAME)
               command: push
               tags: $(Build.SourceVersion)
 
