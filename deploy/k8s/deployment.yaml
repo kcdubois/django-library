@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-deployment
+spec:
+  selector:
+    matchLabels:
+      app: django-deployment
+  template:
+    metadata:
+      labels:
+        app: django-deployment
+    spec:
+      containers:
+        - name: django
+          image: django-starter:latest
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8000
+              name: app

@@ -1,0 +1,35 @@
+{
+	"name": "django-devcontainer",
+	"dockerComposeFile": "docker-compose.yml",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	"service": "devcontainer",
+	"forwardPorts": [
+		8000
+	],
+	"containerEnv": {
+		"DB_HOST": "db",
+		"DB_PORT": "5432",
+		"DB_NAME": "postgres",
+		"DB_USER": "postgres",
+		"DB_PASS": "postgres",
+		"DJANGO_DEBUG": "yes",
+		"DJANGO_SECRET_KEY": "aal1@w5w@o6=sbakp2jsntk$p0i)!hm3i0)(uy2&o(rf4bob#w"
+	},
+	"mounts": [
+		{
+			"source": "~/code/dotfiles/xdg_config",
+			"target": "/home/dev/.config",
+			"type": "bind"
+		}
+	],
+	"remoteUser": "dev",
+	"features": {
+		"ghcr.io/devcontainers/features/common-utils": {
+			"installZsh": true,
+			"username": "dev"
+		},
+		"ghcr.io/devcontainers-extra/features/pipenv": {},
+		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {}
+	},
+	"postCreateCommand": "pipenv install --system --dev"
+}

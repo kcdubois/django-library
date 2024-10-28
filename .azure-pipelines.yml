@@ -1,0 +1,55 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  name: vmss-qkxbj8hg-azp
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: wiz-lab-ado-azure/templates
+
+variables:
+ - group: wiz-cli
+
+stages: 
+  - stage: build
+    displayName: Docker build
+    jobs:
+      - job: buildACR
+        displayName: Build container image to ACR
+        steps:
+          - task: DockerInstaller@0
+            displayName: Install Docker CLI
+
+          - task: Docker@2
+            displayName: Build container image
+            inputs:
+              containerRegistry: acreemrs5ia
+              repository: wizard-meeple
+              command: build
+              tags: $(Build.SourceVersion)
+
+          - task: wiz@0
+            displayName: Scan with Wiz
+            inputs:
+              command: 'image'
+              clientid: $(WIZ_CLIENT_ID)
+              secret: $(WIZ_CLIENT_SECRET)
+              image: 'acreemrs5ia.azurecr.io/wizard-meeple:$(Build.SourceVersion)'
+              policyHitsOnly: true
+          - task: Docker@2
+            displayName: Push image to ACR
+            inputs:
+              containerRegistry: acreemrs5ia
+              repository: wizard-meeple
+              command: push
+              tags: $(Build.SourceVersion)
+
+#      - template: jfrog-docker@templates
+#        parameters:
+#          imageName: kcduboiswiz.jfrog.io/wizard-meeple/wizard-meeple
+
