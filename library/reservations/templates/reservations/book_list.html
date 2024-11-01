@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Book Catalog{% endblock %}
+
+{% block main %}
+<div class="row">
+    <h4>Book Catalog</h4>
+    {% if books %}
+        {% for book in books %}
+            <div class="col s12 m6 l4">
+                <div class="card">
+                    <div class="card-image">
+                        <!-- Placeholder image if book image is not available -->
+				{% if book.image_url %}
+				<img src="{{ book.image_url }}" alt="{{ book.title }}">
+				{% else %}
+				<img src="{% static 'reservations/img/default_book.png' %}" alt="{{ book.title }}">
+				{% endif %}
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title">{{ book.title }}</span>
+			<strong>Author: {{ book.author }}</strong>
+				<div class="divider"></div>
+				<p>{{ book.description|truncatechars:60}}</p>
+                    </div>
+                    <div class="card-action">
+                        <a href="{% url 'reservations:book-detail' book.pk %}" class="btn blue waves-effect waves-light">More Details</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No books available at this time.</p>
+    {% endif %}
+</div>
+{% endblock %}
+

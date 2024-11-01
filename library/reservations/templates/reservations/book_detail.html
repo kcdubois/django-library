@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block main %}
+<div class="container">
+    <!-- Link back to the catalog -->
+    <a href="{% url 'reservations:book-list' %}" class="btn-flat waves-effect">
+        <i class="material-icons left">arrow_back</i>Back to Catalog
+    </a>
+
+    <!-- Book Details Section -->
+    <div class="row" style="margin-top: 20px;">
+        <div class="col s12 m4">
+            <!-- Book Image -->
+	{% if book.image_url %}
+		<img src="{{ book.image_url }}" alt="{{ book.title }}" class="responsive-img">
+	{% else %}
+		<img src="{% static 'reservations/img/default_book.png' %}" alt="{{ book.title }}" class="responsive-img">
+	{% endif %}
+        </div>
+        <div class="col s12 m8">
+            <!-- Book Title and Author -->
+            <h4>{{ book.title }}</h4>
+            <p><strong>Author:</strong> {{ book.author.first_name }} {{ book.author.last_name }}</p>
+            <div class="divider"></div>
+            <!-- Book Description -->
+            <p style="margin-top: 20px;">{{ book.description|default:"No description available." }}</p>
+        </div>
+    </div>
+
+    <!-- Reservation Button if Available -->
+    <div class="row" style="margin-top: 20px;">
+        {% if book.is_available %}
+            <form action="{% url 'reservations:reserve-book' %}" method="post">
+                {% csrf_token %}
+		<input type="hidden" value="{{ book.pk }}" name="book_id" />
+                <button type="submit" class="btn blue waves-effect waves-light">
+                    Reserve this Book
+                </button>
+            </form>
+        {% else %}
+            <p class="red-text">This book is currently unavailable for reservation.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

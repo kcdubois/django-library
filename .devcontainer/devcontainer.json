@@ -1,11 +1,8 @@
 {
-	"name": "django-devcontainer",
+	"name": "django-library-app",
 	"dockerComposeFile": "docker-compose.yml",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 	"service": "devcontainer",
-	"forwardPorts": [
-		8000
-	],
 	"containerEnv": {
 		"DB_HOST": "db",
 		"DB_PORT": "5432",
@@ -29,7 +26,8 @@
 			"username": "dev"
 		},
 		"ghcr.io/devcontainers-extra/features/pipenv": {},
-		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {}
+		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
+		"ghcr.io/duduribeiro/devcontainer-features/neovim:1": { "version": "nightly" },"
 	},
 	"postCreateCommand": "pipenv install --system --dev"
 }
